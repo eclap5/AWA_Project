@@ -1,0 +1,22 @@
+.card {
+    width: 25%;
+    height: max-content;
+    margin: 10% auto;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 10px;
+    color: white;
+    padding: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+}
+
+.cardContainer {
+    overflow: hidden;
+    position: relative;
+    margin: auto;
+    height: 600px;
+}

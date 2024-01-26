@@ -1,0 +1,27 @@
+.container {
+    width: 25%;;
+    margin: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: translate(0%, 30%);
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: #fff solid 1px;
+    display: grid;
+    place-items: center;
+}
+
+.form-group {
+    margin-top: 3%;
+    margin-bottom: 6%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    label {
+        font-size: 16px;
+    }
+}
