@@ -2,6 +2,7 @@ import TinderCard from "react-tinder-card"
 import { useState, useEffect } from "react"
 import theme from "./utils/MaterialTheme"
 import { ThemeProvider } from "@emotion/react"
+import PopUp from "./utils/PopUp"
 import "./styles/Dashboard.css"
 
 function Dashboard() {
@@ -97,6 +98,7 @@ function Dashboard() {
         <div className="cardContainer">
             {users.map((user, index) => (
                 <TinderCard key={index} onSwipe={(direction) => swiped(direction, user)}>
+                    <PopUp username={user.username} open={user.usersLiked.includes(userId)} />
                     <ThemeProvider theme={theme}>
                         <div className="card">
                             <h2>{user.username}</h2>
