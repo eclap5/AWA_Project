@@ -86,6 +86,7 @@ const Register = () => {
         }
 
         fetchUser(newUser)
+        window.location.href = '/login'
     }
 
     return (

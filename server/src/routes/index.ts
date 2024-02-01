@@ -80,7 +80,15 @@ router.post('/api/users/login',
 
 router.get('/api/users', validateToken, async (req: Request, res: Response) => {
     try {
-        const users: IUser[] = await User.find().select('-password -email -timeCreated -matches')
+        console.log(req.user)
+        const loggedUser: IUser | null = await User.findById((req.user as {_id: string})._id)
+        const users: IUser[] = await User.find({
+            $and: [
+                { _id: { $ne: loggedUser?._id } },
+                { _id: { $nin: loggedUser?.usersLiked } },
+                { _id: { $nin: loggedUser?.matches } }
+            ]
+        }).select('-password -email -timeCreated -matches')
         console.log(users)
         return res.json(users)
     } catch (error: any) {

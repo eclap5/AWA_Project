@@ -3,6 +3,8 @@ import Register from './components/Register'
 import Login from './components/Login'
 import Header from './components/Header'
 import Dashboard from './components/Dashboard'
+import Chat from './components/Chat'
+import Profile from './components/Profile'
 import './App.css'
 
 function App() {
@@ -14,6 +16,8 @@ function App() {
           <Route path='/register' element = {<> <Header /> <Register /> </>} />
           <Route path='/login' element = {<> <Header /> <Login /> </>} />
           <Route path='/dashboard' element = {<> <Header /> <Dashboard /> </>} />
+          <Route path='/chat' element = {<> <Header /> <Chat /> </>} />
+          <Route path='/profile' element = {<> <Header /> <Profile /> </>} />
         </Routes>
       </div>
     </BrowserRouter>
