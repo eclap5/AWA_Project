@@ -4,13 +4,13 @@ import { ChangeEvent } from "react"
 interface FormInputProps {
     label: string
     type: string
-    required: boolean
+    required?: boolean
     value: string
     setValue: (value: string) => void
-
+    defaultValue?: string
 }
 
-const FormInput: React.FC<FormInputProps> = ({ label, type, required, value, setValue }) => {
+const FormInput: React.FC<FormInputProps> = ({ label, type, required, value, setValue, defaultValue }) => {
     return (
         <TextField 
             inputProps={{ style: {color: 'white'}}}
@@ -20,6 +20,7 @@ const FormInput: React.FC<FormInputProps> = ({ label, type, required, value, set
             required={required}
             value={value} 
             onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value)} 
+            defaultValue={defaultValue}
         />
     )
 }

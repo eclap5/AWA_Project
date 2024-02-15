@@ -88,8 +88,16 @@ router.get('/api/users', validateToken_1.validateToken, async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+router.get('/api/users/:id', validateToken_1.validateToken, async (req, res) => {
+    const user = await User_1.User.findById(req.params.id);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    return (res.json(user));
+});
 router.patch('/api/users/:id', validateToken_1.validateToken, async (req, res) => {
     try {
+        console.log(req.params.id, req.body);
         const user = await User_1.User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -101,6 +109,15 @@ router.patch('/api/users/:id', validateToken_1.validateToken, async (req, res) =
             const likedUser = await User_1.User.findById(req.body.matches);
             likedUser?.matches.push(req.params.id);
             user.matches.push(req.body.matches);
+            await likedUser?.save();
+        }
+        if (req.body.username || req.body.pc || req.body.xbox || req.body.playstation || req.body.genres || req.body.freeText) {
+            user.username = req.body.username || user.username;
+            user.pc = req.body.pc || user.pc;
+            user.xbox = req.body.xbox || user.xbox;
+            user.playstation = req.body.playstation || user.playstation;
+            user.genres = req.body.genres || user.genres;
+            user.freeText = req.body.freeText || user.freeText;
         }
         await user.save();
         return res.json({ message: 'User updated successfully' });

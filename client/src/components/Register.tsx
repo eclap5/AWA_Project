@@ -105,9 +105,9 @@ const Register = () => {
                         <FormInput label='password' type='password' required={true} value={password} setValue={setPassword} />
                     </div>
                     <div className="checkbox-group">
-                        <CheckboxInput label='PC' setChecked={setPc} />
-                        <CheckboxInput label='Xbox' setChecked={setXbox} />
-                        <CheckboxInput label='Playstation' setChecked={setPlaystation} />
+                        <CheckboxInput label='PC' setChecked={setPc} isChecked={false} />
+                        <CheckboxInput label='Xbox' setChecked={setXbox} isChecked={false} />
+                        <CheckboxInput label='Playstation' setChecked={setPlaystation} isChecked={false} />
                     </div>
                     <div className="form-group">
                         <GenreSelection genreOptions={genreOptions} genres={genres} setValue={setGenres} />

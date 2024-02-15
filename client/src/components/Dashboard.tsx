@@ -23,7 +23,7 @@ function Dashboard() {
 
     useEffect(() => {
         document.title = 'Dashboard'
-        setUserId(localStorage.getItem('user id')!)
+        setUserId(localStorage.getItem('user_id')!)
         fetchUsers()
     }, [])
 

@@ -41,13 +41,13 @@ const Login = () => {
 
                 if (data.token) {
                     localStorage.setItem('token', data.token)
-                    localStorage.setItem('user id', data.userId)
+                    localStorage.setItem('user_id', data.userId)
                     window.location.href = '/dashboard'
                 }
                 console.log(data)
             } catch (error: unknown) {
                 if (error instanceof Error) {
-                    console.log(`Error when trying to register: ${error.message}`)
+                    console.log(`Error when trying to login: ${error.message}`)
                 }
             }
         }

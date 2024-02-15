@@ -14,14 +14,14 @@ function Header() {
     }
   }, [])
 
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
-  const handleMenu = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setAnchorEl(event.currentTarget)
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl(null)
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
