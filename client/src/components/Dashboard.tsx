@@ -86,7 +86,7 @@ function Dashboard() {
 
     return (
         <div className="cardContainer">
-            {users && users.length > 0 && userIndex <= users.length && (
+            {users && users.length > 0 && userIndex < users.length && (
                 <TinderCard key={userIndex} onSwipe={(direction) => swiped(direction, users[userIndex])} preventSwipe={['up', 'down']}>
                     <PopUp username={users[userIndex].username} open={users[userIndex].usersLiked.includes(userId)} />
                     <ThemeProvider theme={theme}>
@@ -100,7 +100,7 @@ function Dashboard() {
                         </div>
                     </ThemeProvider>
                 </TinderCard> )}
-                {(users && users.length === 0) || (users && users.length > 0 && userIndex === users.length) && (
+                {((users && users.length === 0) || (users && users.length > 0 && userIndex === users.length)) && (
                     <TinderCard preventSwipe={['left', 'right', 'up', 'down']}>
                     <ThemeProvider theme={theme}>
                         <div className="card">
