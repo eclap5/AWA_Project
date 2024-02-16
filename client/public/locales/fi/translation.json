@@ -1,0 +1,15 @@
+{
+    "Dashboard": "Etusivu",
+    "Profile": "Profiili",
+    "Chat": "Viestit",
+    "Logout": "Kirjaudu ulos",
+    "Login": "Kirjaudu",
+    "Register": "Rekisteröidy",
+    "email": "sähköposti",
+    "password": "salasana",
+    "description": "kuvaus",
+    "username": "käyttäjänimi",
+    "Save": "Tallenna",
+    "Edit profile": "Muokkaa profiilia",
+    "Create a profile": "Luo profiili"
+}

@@ -1,0 +1,15 @@
+{
+    "Dashboard": "Dashboard",
+    "Profile": "Profile",
+    "Chat": "Chat",
+    "Logout": "Logout",
+    "Login": "Login",
+    "Register": "Register",
+    "email": "email",
+    "password": "password",
+    "description": "description",
+    "username": "username",
+    "Save": "Save",
+    "Edit profile": "Edit profile",
+    "Create a profile": "Create a profile"
+}

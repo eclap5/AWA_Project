@@ -16,6 +16,7 @@ router.get('/', (req, res) => {
 });
 router.post('/api/users/register', async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
+    console.log(req.body);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -113,12 +114,13 @@ router.patch('/api/users/:id', validateToken_1.validateToken, async (req, res) =
         }
         if (req.body.username || req.body.pc || req.body.xbox || req.body.playstation || req.body.genres || req.body.freeText) {
             user.username = req.body.username || user.username;
-            user.pc = req.body.pc || user.pc;
-            user.xbox = req.body.xbox || user.xbox;
-            user.playstation = req.body.playstation || user.playstation;
+            user.pc = req.body.pc;
+            user.xbox = req.body.xbox;
+            user.playstation = req.body.playstation;
             user.genres = req.body.genres || user.genres;
             user.freeText = req.body.freeText || user.freeText;
         }
+        console.log(user);
         await user.save();
         return res.json({ message: 'User updated successfully' });
     }

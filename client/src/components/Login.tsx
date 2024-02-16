@@ -3,6 +3,7 @@ import { ThemeProvider, Button } from "@mui/material"
 import FormInput from "./utils/FormInput"
 import theme from "./utils/MaterialTheme"
 import "./styles/Register.css"
+import { useTranslation } from "react-i18next"
 
 const Login = () => {
     useEffect(() => {
@@ -11,6 +12,8 @@ const Login = () => {
 
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+
+    const { t } = useTranslation()
 
     interface Credentials {
         email: string
@@ -56,18 +59,18 @@ const Login = () => {
 
     return (
         <div className="container">
-            <h2>Login</h2>
+            <h2>{t('Login')}</h2>
             <div className="content">
                 <form onSubmit={handleSubmit}>
                 <ThemeProvider theme={theme}>
                     <div className="form-group">
-                        <FormInput label='email' type='email' required={true} value={email} setValue={setEmail} />
+                        <FormInput label={t('email')} type='email' required={true} value={email} setValue={setEmail} />
                     </div>
                     <div className="form-group">
-                        <FormInput label='password' type='password' required={true} value={password} setValue={setPassword} />
+                        <FormInput label={t('password')} type='password' required={true} value={password} setValue={setPassword} />
                     </div>
                     <div className="form-group">
-                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>Login</Button>
+                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>{t('Login')}</Button>
                     </div>
                 </ThemeProvider>
                 </form>

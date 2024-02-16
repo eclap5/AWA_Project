@@ -11,13 +11,13 @@ interface GenreSelectProps {
 const GenreSelect: React.FC<GenreSelectProps> = ({ genreOptions, genres, setValue }) => {
     return (
         <FormControl sx={{ m: 1, width: 300 }}>
-            <InputLabel id="select-genres">Genres</InputLabel>
+            <InputLabel id="select-genres">Genre</InputLabel>
             <Select
             multiple
             disabled={genres.length === 3}
             value={genres}
             onChange={(event) => setValue(event.target.value as string[])}
-            input={<OutlinedInput label="Genres" />}
+            input={<OutlinedInput label="Genre" />}
             renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {selected.map((value: string) => (

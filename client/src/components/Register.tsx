@@ -6,6 +6,7 @@ import FormInput from "./utils/FormInput"
 import theme from "./utils/MaterialTheme"
 import "./styles/Register.css"
 import backgroundImg from "../assets/background.jpg"
+import { useTranslation } from "react-i18next"
 
 const Register = () => {
     useEffect(() => {
@@ -49,6 +50,8 @@ const Register = () => {
     'Horror'
     ]
 
+    const { t } = useTranslation()
+
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         const newUser: User = {
@@ -78,6 +81,8 @@ const Register = () => {
                 }
                 const data = await response.json()
                 console.log(data)
+
+                window.location.href = '/login'
             } catch (error: unknown) {
                 if (error instanceof Error) {
                     console.log(`Error when trying to register: ${error.message}`)
@@ -86,37 +91,36 @@ const Register = () => {
         }
 
         fetchUser(newUser)
-        window.location.href = '/login'
     }
 
     return (
         <div className="container">
-            <h2>Create a profile</h2>
+            <h2>{t('Create a profile')}</h2>
             <div className="content">
                 <form onSubmit={handleSubmit}>
                 <ThemeProvider theme={theme}>
                     <div className="form-group">
-                        <FormInput label='username' type='text' required={true} value={username} setValue={setUsername} />
+                        <FormInput label={t('username')} type='text' required={true} value={username} setValue={setUsername} />
                     </div>
                     <div className="form-group">
-                        <FormInput label='email' type='email' required={true} value={email} setValue={setEmail} />
+                        <FormInput label={t('email')} type='email' required={true} value={email} setValue={setEmail} />
                     </div>
                     <div className="form-group">
-                        <FormInput label='password' type='password' required={true} value={password} setValue={setPassword} />
+                        <FormInput label={t('password')} type='password' required={true} value={password} setValue={setPassword} />
                     </div>
                     <div className="checkbox-group">
-                        <CheckboxInput label='PC' setChecked={setPc} isChecked={false} />
-                        <CheckboxInput label='Xbox' setChecked={setXbox} isChecked={false} />
-                        <CheckboxInput label='Playstation' setChecked={setPlaystation} isChecked={false} />
+                        <CheckboxInput label='PC' setChecked={setPc} />
+                        <CheckboxInput label='Xbox' setChecked={setXbox} />
+                        <CheckboxInput label='Playstation' setChecked={setPlaystation} />
                     </div>
                     <div className="form-group">
                         <GenreSelection genreOptions={genreOptions} genres={genres} setValue={setGenres} />
                     </div>
                     <div className="form-group">
-                        <TextField multiline maxRows={3} inputProps={{ style: {color: 'white'} }} onChange={(event) => {setFreeText(event.target.value)}} label='Description' />
+                        <TextField multiline maxRows={3} inputProps={{ style: {color: 'white'} }} onChange={(event) => {setFreeText(event.target.value)}} label={t('description')} />
                     </div>
                     <div className="form-group">
-                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>Register</Button>
+                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>{t('Register')}</Button>
                     </div>
                 </ThemeProvider>
                 </form>

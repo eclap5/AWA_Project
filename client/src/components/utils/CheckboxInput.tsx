@@ -4,7 +4,7 @@ import React, { ChangeEvent } from "react"
 interface CheckboxInputProps {
     label: string
     setChecked: (checked: boolean) => void
-    isChecked: boolean
+    isChecked?: boolean
 }
 
 const CheckboxInput: React.FC<CheckboxInputProps> = ({ label, setChecked, isChecked }) => {

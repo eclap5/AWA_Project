@@ -2,6 +2,7 @@ import { AppBar, Box, Button, IconButton, MenuItem, Toolbar, Typography, Menu } 
 import MenuIcon from '@mui/icons-material/Menu'
 import { Link } from "react-router-dom"
 import React, { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import backgroundImg from "../assets/background.jpg"
 
 function Header() {
@@ -25,14 +26,14 @@ function Header() {
   };
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  // const { t, i18n } = useTranslation()
-  // const changeLanguage = (lang) => {
-  //   i18n.changeLanguage(lang)
-  // }
+  const { t, i18n } = useTranslation()
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang)
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    window.location.href = '/Login'
+    window.location.href = '/login'
   }
 
   return (
@@ -41,8 +42,8 @@ function Header() {
         <Toolbar>
           {!isLoggedIn ? (
             <>
-              <Button component={Link} to='/login' color="inherit">Login</Button>
-              <Button component={Link} to='/register' color="inherit">Register</Button>
+              <Button component={Link} to='/login' color="inherit">{t('Login')}</Button>
+              <Button component={Link} to='/register' color="inherit">{t('Register')}</Button>
             </>
           ): (
             <>
@@ -87,18 +88,18 @@ function Header() {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem component={Link} to='/dashboard'>Dashboard</MenuItem>
-              <MenuItem component={Link} to='/profile'>Profile</MenuItem>
-              <MenuItem component={Link} to='/chat'>Chat</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem component={Link} to='/dashboard'>{t('Dashboard')}</MenuItem>
+              <MenuItem component={Link} to='/profile'>{t('Profile')}</MenuItem>
+              <MenuItem component={Link} to='/chat'>{t('Chat')}</MenuItem>
+              <MenuItem onClick={handleLogout}>{t('Logout')}</MenuItem>
             </Menu>
           </>
           )}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             GamerMatcher
           </Typography>
-          <Button id='fi' color='inherit'>FI</Button>
-          <Button id='en' color='inherit'>EN</Button>
+          <Button id='fi' color='inherit' onClick={() => {changeLanguage('fi')}}>FI</Button>
+          <Button id='en' color='inherit' onClick={() => {changeLanguage('en')}}>EN</Button>
         </Toolbar>
       </AppBar>
     </Box>
