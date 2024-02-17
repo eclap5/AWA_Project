@@ -26,7 +26,7 @@ async (req: Request, res: Response) => {
         const existingUser: IUser | null = await User.findOne({ email: req.body.email })
 
         if (existingUser) {
-            return res.status(403).json({ email: 'Email already in use.' })
+            return res.status(401).json({ email: 'Email already in use.' })
         }
 
         const salt: string = bcrypt.genSaltSync(10)
@@ -60,7 +60,7 @@ router.post('/api/users/login',
         const user: IUser | null = await User.findOne({ email: req.body.email })
 
         if (!user) {
-            return res.status(403).json({ message: 'Login failed' })
+            return res.status(401).json({ message: 'Login failed' })
         }
         
         if (bcrypt.compareSync(req.body.password, user.password)) {

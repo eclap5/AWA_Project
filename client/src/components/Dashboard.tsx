@@ -20,6 +20,9 @@ function Dashboard() {
     const [users, setUsers] = useState<User[]>(null!)
     const [userIndex, setUserIndex] = useState<number>(0)
     const [userId, setUserId] = useState<string>('')
+    const [isMatch, setIsMatch] = useState<boolean>(false)
+    const [hasSwiped, setHasSwiped] = useState<boolean>(false)
+    const [currentUser, setCurrentUser] = useState<User | null>(null)
 
     useEffect(() => {
         document.title = 'Dashboard'
@@ -36,6 +39,12 @@ function Dashboard() {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
             })
+
+            if (response.status === 403) {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user_id')
+                window.location.href = '/login'
+            }
 
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`)
@@ -67,28 +76,39 @@ function Dashboard() {
 
     const swiped = (direction: string, user: User) => {
         console.log(userIndex, users)
+        setHasSwiped(true)
         if (direction === 'right') {
-            increaseUserIndex()
             console.log('You liked ' + user.username)
+            setCurrentUser(user)
             
             if (user.usersLiked.includes(userId)) {
                 console.log('Match!')
+
                 updateUser('matches', user)
+                setIsMatch(true)
             } else {
                 updateUser('usersLiked', user)
             }
         } else if (direction === 'left') {
-            increaseUserIndex()
             console.log('You disliked ' + user.username)
             setUsers(users.filter((u) => u.username !== user.username))
         }
+        increaseUserIndex()
     }
 
     return (
         <div className="cardContainer">
             {users && users.length > 0 && userIndex < users.length && (
-                <TinderCard key={userIndex} onSwipe={(direction) => swiped(direction, users[userIndex])} preventSwipe={['up', 'down']}>
-                    <PopUp username={users[userIndex].username} open={users[userIndex].usersLiked.includes(userId)} />
+                <TinderCard 
+                    key={userIndex} 
+                    onSwipe={(direction) => swiped(direction, users[userIndex])}
+                    preventSwipe={['up', 'down']}
+                >
+                    <PopUp 
+                        username={currentUser?.username} 
+                        open={isMatch && hasSwiped} 
+                        onClose={() => { setIsMatch(false); setHasSwiped(false) }}
+                    />
                     <ThemeProvider theme={theme}>
                         <div className="card">
                             <h2>{users[userIndex].username}</h2>
@@ -108,7 +128,7 @@ function Dashboard() {
                         </div>
                     </ThemeProvider>
                 </TinderCard>
-                )}
+            )}
         </div>
     )
 }

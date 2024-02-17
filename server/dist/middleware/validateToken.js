@@ -8,7 +8,7 @@ const passport_config_1 = __importDefault(require("./passport-config"));
 const validateToken = (req, res, next) => {
     passport_config_1.default.authenticate('jwt', { session: false }, (err, verifiedUser) => {
         if (err || !verifiedUser) {
-            return res.sendStatus(401);
+            return res.sendStatus(403);
         }
         req.user = verifiedUser;
         next();

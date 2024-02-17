@@ -23,7 +23,7 @@ router.post('/api/users/register', async (req, res) => {
     try {
         const existingUser = await User_1.User.findOne({ email: req.body.email });
         if (existingUser) {
-            return res.status(403).json({ email: 'Email already in use.' });
+            return res.status(401).json({ email: 'Email already in use.' });
         }
         const salt = bcrypt_1.default.genSaltSync(10);
         const hash = bcrypt_1.default.hashSync(req.body.password, salt);
@@ -52,7 +52,7 @@ router.post('/api/users/login', inputValidation_1.validateEmail, async (req, res
     try {
         const user = await User_1.User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(403).json({ message: 'Login failed' });
+            return res.status(401).json({ message: 'Login failed' });
         }
         if (bcrypt_1.default.compareSync(req.body.password, user.password)) {
             const jwtPayload = {

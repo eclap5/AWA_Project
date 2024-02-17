@@ -70,7 +70,7 @@ const Login = () => {
                         <FormInput label={t('password')} type='password' required={true} value={password} setValue={setPassword} />
                     </div>
                     <div className="form-group">
-                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>{t('Login')}</Button>
+                        <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'lightgray', color: 'black', border: '1px solid white'}}}>{t('Login')}</Button>
                     </div>
                 </ThemeProvider>
                 </form>

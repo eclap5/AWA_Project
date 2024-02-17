@@ -9,7 +9,7 @@ interface CustomRequest extends Request {
 export const validateToken = (req: CustomRequest, res: Response, next: NextFunction) => {
     passport.authenticate('jwt', { session: false }, (err: Error | null, verifiedUser: JwtPayload | null) => {
         if (err || !verifiedUser) {
-            return res.sendStatus(401)
+            return res.sendStatus(403)
         }
         req.user = verifiedUser
         next()
