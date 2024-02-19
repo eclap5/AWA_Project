@@ -69,6 +69,17 @@ function Dashboard() {
         })
     }
 
+    const createChatSession = async (user: User) => {
+        await fetch('http://localhost:3000/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({user1: userId, user2: user._id})
+        })
+    }
+
     const increaseUserIndex = () => {
         if (users && userIndex + 1 <= users.length)
             setUserIndex((prevIndex) => (prevIndex + 1 < (users ? users.length + 1 : 0) ? prevIndex + 1 : prevIndex))
@@ -85,6 +96,7 @@ function Dashboard() {
                 console.log('Match!')
 
                 updateUser('matches', user)
+                createChatSession(user)
                 setIsMatch(true)
             } else {
                 updateUser('usersLiked', user)

@@ -1,10 +1,11 @@
 import express, { Request, Response, Router } from "express"
 import bcrypt from "bcrypt"
-import { ValidationError, validationResult, Result } from "express-validator"
-import jwt, {JwtPayload} from "jsonwebtoken"
+import { ValidationError, validationResult, Result, body } from "express-validator"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import { validateToken } from "../middleware/validateToken"
 import { validateEmail, validatePassword } from "../validators/inputValidation"
 import { User, IUser } from "../models/User"
+import { ChatSession, IChatSession } from "../models/ChatSession"
 
 
 const router: Router = express.Router()
@@ -16,7 +17,6 @@ router.get('/', (req: Request, res: Response) => {
 router.post('/api/users/register',
 async (req: Request, res: Response) => {
     const errors: Result<ValidationError> = validationResult(req)
-    console.log(req.body)
 
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
@@ -31,7 +31,6 @@ async (req: Request, res: Response) => {
 
         const salt: string = bcrypt.genSaltSync(10)
         const hash: string = bcrypt.hashSync(req.body.password, salt)
-        console.log(req.body)
 
         await User.create({
             email: req.body.email,
@@ -90,7 +89,6 @@ router.get('/api/users', validateToken, async (req: Request, res: Response) => {
                 { _id: { $nin: loggedUser?.matches } }
             ]
         }).select('-password -email -timeCreated -matches')
-        console.log(users)
         return res.json(users)
     } catch (error: any) {
         console.error(`Error during fetching users: ${error}`)
@@ -135,11 +133,72 @@ router.patch('/api/users/:id', validateToken, async (req: Request, res: Response
             user.genres = req.body.genres || user.genres
             user.freeText = req.body.freeText || user.freeText
         }
-        console.log(user)
         await user.save()
         return res.json({ message: 'User updated successfully' })
     } catch (error: any) {
         console.error(`Error during updating user: ${error}`)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+router.post('/api/chat', validateToken, async (req: Request, res: Response) => {
+
+    try {
+        await ChatSession.create({
+            user1: req.body.user1,
+            user2: req.body.user2,
+            messages: []
+        })
+        return res.status(201).json({ message: 'Chat session created successfully' })
+    } catch (error: any) {
+        console.error(`Error during chat session creation: ${error}`)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+router.get('/api/chat', validateToken, async (req: Request, res: Response) => {
+    try {
+        const chatSessions: IChatSession[] = await ChatSession.find({
+            $or: [
+                { user1: (req.user as {_id: string})._id },
+                { user2: (req.user as {_id: string})._id }
+            ]
+        })
+        return res.json(chatSessions)
+    } catch (error: any) {
+        console.error(`Error during fetching chat sessions: ${error}`)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+router.post('/api/chat/messages', validateToken, async (req: Request, res: Response) => {
+    try {
+        const chatSession: IChatSession | null = await ChatSession.findById(req.body.chatId)
+        if (!chatSession) {
+            return res.status(404).json({ message: 'Chat session not found' })
+        }
+        chatSession.messages.push({
+            senderId: req.body.senderId,
+            message: req.body.message,
+            timestamp: req.body.timestamp
+        })
+        await chatSession.save()
+        return res.json({ message: 'Message sent successfully' })
+    } catch (error: any) {
+        console.error(`Error during sending message: ${error}`)
+        return res.status(500).json({ error: 'Internal Server Error' })
+    }
+})
+
+router.get('/api/chat/messages/:id', validateToken, async (req: Request, res: Response) => {
+    try {
+        const chatSession: IChatSession | null = await ChatSession.findById(req.params.id)
+        if (!chatSession) {
+            return res.status(404).json({ message: 'Chat session not found' })
+        }
+        return res.json(chatSession.messages)
+    } catch (error: any) {
+        console.error(`Error during fetching messages: ${error}`)
         return res.status(500).json({ error: 'Internal Server Error' })
     }
 })

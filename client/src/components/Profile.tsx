@@ -46,6 +46,12 @@ function Profile() {
                 }
             })
 
+            if (response.status === 403) {
+                localStorage.removeItem('token')
+                localStorage.removeItem('user_id')
+                window.location.href = '/login'
+            }
+
             if (!response.ok) {
                 throw new Error(`HTTP error: ${response.status}`)
             }

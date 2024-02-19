@@ -10,13 +10,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const validateToken_1 = require("../middleware/validateToken");
 const inputValidation_1 = require("../validators/inputValidation");
 const User_1 = require("../models/User");
+const ChatSession_1 = require("../models/ChatSession");
 const router = express_1.default.Router();
 router.get('/', (req, res) => {
     res.json({ message: 'this is index page' });
 });
 router.post('/api/users/register', async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
-    console.log(req.body);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -27,7 +27,6 @@ router.post('/api/users/register', async (req, res) => {
         }
         const salt = bcrypt_1.default.genSaltSync(10);
         const hash = bcrypt_1.default.hashSync(req.body.password, salt);
-        console.log(req.body);
         await User_1.User.create({
             email: req.body.email,
             password: hash,
@@ -81,7 +80,6 @@ router.get('/api/users', validateToken_1.validateToken, async (req, res) => {
                 { _id: { $nin: loggedUser?.matches } }
             ]
         }).select('-password -email -timeCreated -matches');
-        console.log(users);
         return res.json(users);
     }
     catch (error) {
@@ -120,12 +118,72 @@ router.patch('/api/users/:id', validateToken_1.validateToken, async (req, res) =
             user.genres = req.body.genres || user.genres;
             user.freeText = req.body.freeText || user.freeText;
         }
-        console.log(user);
         await user.save();
         return res.json({ message: 'User updated successfully' });
     }
     catch (error) {
         console.error(`Error during updating user: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.post('/api/chat', validateToken_1.validateToken, async (req, res) => {
+    try {
+        await ChatSession_1.ChatSession.create({
+            user1: req.body.user1,
+            user2: req.body.user2,
+            messages: []
+        });
+        return res.status(201).json({ message: 'Chat session created successfully' });
+    }
+    catch (error) {
+        console.error(`Error during chat session creation: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.get('/api/chat', validateToken_1.validateToken, async (req, res) => {
+    try {
+        const chatSessions = await ChatSession_1.ChatSession.find({
+            $or: [
+                { user1: req.user._id },
+                { user2: req.user._id }
+            ]
+        });
+        return res.json(chatSessions);
+    }
+    catch (error) {
+        console.error(`Error during fetching chat sessions: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.post('/api/chat/messages', validateToken_1.validateToken, async (req, res) => {
+    try {
+        const chatSession = await ChatSession_1.ChatSession.findById(req.body.chatId);
+        if (!chatSession) {
+            return res.status(404).json({ message: 'Chat session not found' });
+        }
+        chatSession.messages.push({
+            senderId: req.body.senderId,
+            message: req.body.message,
+            timestamp: req.body.timestamp
+        });
+        await chatSession.save();
+        return res.json({ message: 'Message sent successfully' });
+    }
+    catch (error) {
+        console.error(`Error during sending message: ${error}`);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+router.get('/api/chat/messages/:id', validateToken_1.validateToken, async (req, res) => {
+    try {
+        const chatSession = await ChatSession_1.ChatSession.findById(req.params.id);
+        if (!chatSession) {
+            return res.status(404).json({ message: 'Chat session not found' });
+        }
+        return res.json(chatSession.messages);
+    }
+    catch (error) {
+        console.error(`Error during fetching messages: ${error}`);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
