@@ -15,6 +15,7 @@ router.get('/', (req: Request, res: Response) => {
 })
 
 router.post('/api/users/register',
+validateEmail, validatePassword,
 async (req: Request, res: Response) => {
     const errors: Result<ValidationError> = validationResult(req)
 

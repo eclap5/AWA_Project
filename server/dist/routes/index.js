@@ -15,7 +15,7 @@ const router = express_1.default.Router();
 router.get('/', (req, res) => {
     res.json({ message: 'this is index page' });
 });
-router.post('/api/users/register', async (req, res) => {
+router.post('/api/users/register', inputValidation_1.validateEmail, inputValidation_1.validatePassword, async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
