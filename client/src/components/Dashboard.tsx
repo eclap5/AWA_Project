@@ -1,28 +1,31 @@
 import TinderCard from "react-tinder-card"
 import { useState, useEffect } from "react"
-import theme from "./utils/MaterialTheme"
+import { useTranslation } from "react-i18next"
+import theme from "./themes/MaterialTheme"
 import { ThemeProvider } from "@emotion/react"
 import PopUp from "./utils/PopUp"
 import "./styles/Dashboard.css"
 
-function Dashboard() {
-    type User = {
-        _id: string
-        username: string
-        pc: boolean
-        playstation: boolean
-        xbox: boolean
-        genres: string[]
-        freeText: string
-        usersLiked: string[]
-    }
+type User = {
+    _id: string
+    username: string
+    pc: boolean
+    playstation: boolean
+    xbox: boolean
+    genres: string[]
+    freeText: string
+    usersLiked: string[]
+}
 
+function Dashboard() {
     const [users, setUsers] = useState<User[]>(null!)
     const [userIndex, setUserIndex] = useState<number>(0)
     const [userId, setUserId] = useState<string>('')
     const [isMatch, setIsMatch] = useState<boolean>(false)
     const [hasSwiped, setHasSwiped] = useState<boolean>(false)
     const [currentUser, setCurrentUser] = useState<User | null>(null)
+
+    const { t } = useTranslation()
 
     useEffect(() => {
         document.title = 'Dashboard'
@@ -136,7 +139,7 @@ function Dashboard() {
                     <TinderCard preventSwipe={['left', 'right', 'up', 'down']}>
                     <ThemeProvider theme={theme}>
                         <div className="card">
-                            <h2>No more players to show. <br /> Come back later.</h2>
+                            <h2>{t('No more players to show.')} <br /> {t('Come back later.')}</h2>
                         </div>
                     </ThemeProvider>
                 </TinderCard>

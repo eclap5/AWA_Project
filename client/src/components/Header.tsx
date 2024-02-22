@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import backgroundImg from "../assets/background.jpg"
+import "./styles/header.css"
 
 function Header() {
   useEffect(() => {
@@ -41,8 +42,8 @@ function Header() {
         <Toolbar>
           {!isLoggedIn ? (
             <>
-              <Button sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} component={Link} to='/login' color="inherit">{t('Login')}</Button>
-              <Button sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} component={Link} to='/register' color="inherit">{t('Register')}</Button>
+              <Button className='btn' sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} component={Link} to='/login' color="inherit">{t('Login')}</Button>
+              <Button className='btn' sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} component={Link} to='/register' color="inherit">{t('Register')}</Button>
             </>
           ): (
             <>
@@ -94,11 +95,11 @@ function Header() {
             </Menu>
           </>
           )}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography className="title" variant="h6" component="div" sx={{ flexGrow: 1 }}>
             GamerMatcher
           </Typography>
-          <Button sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} id='fi' color='inherit' onClick={() => {changeLanguage('fi')}}>FI</Button>
-          <Button sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} id='en' color='inherit' onClick={() => {changeLanguage('en')}}>EN</Button>
+          <Button className='btn' sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} id='fi' color='inherit' onClick={() => {changeLanguage('fi')}}>FI</Button>
+          <Button className='btn' sx={{ '&:hover': {color: 'black', backgroundColor: 'lightgray'} }} id='en' color='inherit' onClick={() => {changeLanguage('en')}}>EN</Button>
         </Toolbar>
       </AppBar>
     </Box>

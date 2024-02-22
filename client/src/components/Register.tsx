@@ -3,10 +3,22 @@ import { TextField, ThemeProvider, Button } from "@mui/material"
 import CheckboxInput from "./utils/CheckboxInput"
 import GenreSelection from "./utils/GenreSelection"
 import FormInput from "./utils/FormInput"
-import theme from "./utils/MaterialTheme"
+import theme from "./themes/MaterialTheme"
 import "./styles/Register.css"
 import backgroundImg from "../assets/background.jpg"
+import { genreOptions } from "../constants/genres"
 import { useTranslation } from "react-i18next"
+
+interface User {
+    username: string
+    email: string
+    password: string
+    pc: boolean
+    xbox: boolean
+    playstation: boolean
+    genres: string[]
+    freeText: string
+}
 
 const Register = () => {
     useEffect(() => {
@@ -14,17 +26,6 @@ const Register = () => {
         document.body.style.background = `url(${backgroundImg}) no-repeat center center fixed`
         document.body.style.backgroundSize = 'cover'
     }, [])
-
-    interface User {
-        username: string
-        email: string
-        password: string
-        pc: boolean
-        xbox: boolean
-        playstation: boolean
-        genres: string[]
-        freeText: string
-    }
 
     const [username, setUsername] = useState<string>('')
     const [email, setEmail] = useState<string>('')
@@ -34,21 +35,6 @@ const Register = () => {
     const [playstation, setPlaystation] = useState<boolean>(false)
     const [genres, setGenres] = useState<string[]>([])
     const [freeText, setFreeText] = useState<string>('')
-
-    // Todo: tää jonnekkin muualle
-    const genreOptions: string[] = [
-    'Action',
-    'Adventure',
-    'RPG',
-    'Strategy',
-    'Simulation',
-    'Sports',
-    'Racing',
-    'MMO',
-    'Puzzle',
-    'FPS',
-    'Horror'
-    ]
 
     const { t } = useTranslation()
 
@@ -64,7 +50,6 @@ const Register = () => {
             genres,
             freeText
         }
-        console.log(newUser)
 
         const fetchUser = async (user: User) => {
             try {
@@ -89,7 +74,6 @@ const Register = () => {
                 }
             }
         }
-
         fetchUser(newUser)
     }
 

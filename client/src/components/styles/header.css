@@ -1,0 +1,9 @@
+@media (max-width: 768px) {
+    .title {
+        font-size: 0.75rem !important;
+    }
+
+    .btn {
+        font-size: 0.5rem !important;
+    }
+}

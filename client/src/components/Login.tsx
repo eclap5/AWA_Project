@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { ThemeProvider, Button } from "@mui/material"
-import FormInput from "./utils/FormInput"
-import theme from "./utils/MaterialTheme"
-import "./styles/Register.css"
 import { useTranslation } from "react-i18next"
+import FormInput from "./utils/FormInput"
+import theme from "./themes/MaterialTheme"
+import "./styles/Register.css"
+import "./styles/Login.css"
 
 const Login = () => {
     useEffect(() => {

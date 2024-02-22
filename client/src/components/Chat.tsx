@@ -94,8 +94,20 @@ function Chat() {
     }
 
     const openChat = (chat: ChatSession) => {
-        console.log(chat._id)
         setSelectedChat(chat)
+        console.log(selectedChat)
+    }
+
+    const latestMessage = (chat: ChatSession) => {
+        if (chat.messages.length > 0) {
+            const msg: string = chat.messages[chat.messages.length - 1].message
+            const senderId: string = chat.messages[chat.messages.length - 1].senderId
+            if (senderId === loggedUserId) {
+                return t('You') + ': ' + msg
+            } 
+            return usernames[chat.messages[chat.messages.length - 1].senderId] + ': ' + msg  
+        }
+        return 'No messages'
     }
 
     return (
@@ -103,7 +115,7 @@ function Chat() {
             <div style={{ margin: '2%' }}>
                 <p style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', marginBottom: '4px' }} >{t('Messages')}</p>
                 <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                    <List sx={{ width: '100%', maxWidth: 300, bgcolor: '#333', borderRadius: '15px', border: '1px solid white', padding: '0' }}>
+                    <List sx={{ width: '100%', maxWidth: 300, bgcolor: '#333', borderRadius: '15px', border: '1px solid white', padding: '0', overflow: 'auto', '::-webkit-scrollbar': {width: '8px'} }}>
                         {userChats?.map((chat) => (
                             <React.Fragment key={chat._id}>
                                 <ListItemButton onClick={() => openChat(chat)} alignItems="flex-start" sx={{ paddingTop: '0', paddingBottom: '0' }}>
@@ -128,7 +140,7 @@ function Chat() {
                                             variant="body2"
                                             color="gray"
                                         >
-                                            1 new message
+                                            {latestMessage(chat)}
                                         </Typography>
                                         </>
                                     }
@@ -139,7 +151,13 @@ function Chat() {
                         ))}
                     </List>
                 </div>
-                {selectedChat && <ChatMessages chat={selectedChat} loggedUserId={loggedUserId!} username={usernames[selectedChat.user1 === loggedUserId ? selectedChat.user2 : selectedChat.user1]} />}
+                {selectedChat && (
+                    <ChatMessages 
+                        chat={selectedChat} 
+                        loggedUserId={loggedUserId!} 
+                        username={usernames[selectedChat.user1 === loggedUserId ? selectedChat.user2 : selectedChat.user1]} 
+                    />
+                )}
             </div>
         </>
     )

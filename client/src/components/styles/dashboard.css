@@ -20,3 +20,10 @@
     margin: auto;
     height: 600px;
 }
+
+@media (max-width: 768px) {
+    .card {
+        width: 80%;
+        margin: 10% auto;
+    }
+}

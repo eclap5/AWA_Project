@@ -1,0 +1,5 @@
+@media (max-width: 768px) {
+    .genre-selection {
+        width: 200px !important;
+    }
+}

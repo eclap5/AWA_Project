@@ -1,0 +1,9 @@
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+        box-sizing: border-box;
+        margin-left: 10%;
+        margin-right: 10%;
+        padding: 0 20px;
+    }
+}

@@ -1,6 +1,7 @@
 import { Cancel } from "@mui/icons-material"
 import { Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from "@mui/material"
 import { FormEvent } from "react"
+import "../styles/genreSelection.css"
 
 interface GenreSelectProps {
     genreOptions: string[]
@@ -10,7 +11,7 @@ interface GenreSelectProps {
 
 const GenreSelect: React.FC<GenreSelectProps> = ({ genreOptions, genres, setValue }) => {
     return (
-        <FormControl sx={{ m: 1, width: 300 }}>
+        <FormControl className='genre-selection' sx={{ m: 1, width: 300 }}>
             <InputLabel id="select-genres">Genre</InputLabel>
             <Select
             multiple

@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { TextField, Button, ThemeProvider } from '@mui/material'
 import CheckboxInput from './utils/CheckboxInput'
 import GenreSelect from './utils/GenreSelection'
 import FormInput from './utils/FormInput'
-import theme from './utils/MaterialTheme'
-import { TextField, Button, ThemeProvider } from '@mui/material'
-import { useTranslation } from 'react-i18next'
+import theme from './themes/MaterialTheme'
+import { genreOptions } from '../constants/genres'
+import './styles/profile.css'
 
 function Profile() {
     useEffect(() => {
@@ -20,21 +22,6 @@ function Profile() {
     const [freeText, setFreeText] = useState<string>('')
 
     const { t } = useTranslation()
-
-    // Todo: tää jonnekkin muualle
-    const genreOptions: string[] = [
-        'Action',
-        'Adventure',
-        'RPG',
-        'Strategy',
-        'Simulation',
-        'Sports',
-        'Racing',
-        'MMO',
-        'Puzzle',
-        'FPS',
-        'Horror'
-    ]
 
     const fetchUser = async () => {
         try {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { MessageList } from "react-chat-elements"
 import { Button } from "@mui/material"
+import { useTranslation } from "react-i18next"
 import 'react-chat-elements/dist/main.css'
 import '../styles/chat.css'
 
@@ -32,6 +33,8 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
     const [message, setMessage] = useState<string>('')
     const messageListReferance: React.RefObject<HTMLElement> = useRef<HTMLDivElement>(null)
 
+    const { t } = useTranslation()
+
     useEffect(() => {
         const messageArray = props.chat.messages.map((message: Message) => ({
             position: message.senderId === props.loggedUserId ? 'right' : 'left',
@@ -43,7 +46,7 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
         setMessages(messageArray)
         console.log(messages)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [props.chat])
 
     useEffect(() => {
         messageListReferance.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
@@ -136,7 +139,7 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
     return (
         <>
             <h3>{props.username}</h3>
-            <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div className='chat-container'>
                 <MessageList
                     referance={messageListReferance}
                     className='message-list'
@@ -146,9 +149,9 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
                 />
             </div>
             <div>
-                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-                <Button variant='contained' color='primary' onClick={sendMessage}>Send</Button>
-                <Button variant='contained' color='primary' onClick={getMessages}>Refresh</Button>
+                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} style={{ outline: 'none' }} />
+                <Button sx={{margin: '2px', color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}} variant='contained' color='primary' onClick={sendMessage}>{t('Send')}</Button>
+                <Button sx={{margin: '2px', color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}} variant='contained' color='primary' onClick={getMessages}>{t('Refresh')}</Button>
             </div>
         </>
     )
