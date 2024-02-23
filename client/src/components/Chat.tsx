@@ -3,8 +3,20 @@ import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import ChatMessages from "./utils/ChatMessages"
 
-function Chat() {
+type Message = {
+    message: string
+    senderId: string
+    timestamp: Date
+}
 
+interface ChatSession {
+    user1: string
+    user2: string
+    messages: Message[]
+    _id: string
+}
+
+function Chat() {
     const [userChats, setUserChats] = useState<ChatSession[] | null>(null)
     const [loggedUserId] = useState<string | null>(localStorage.getItem('user_id'))
     const [usernames, setUsername] = useState<Record<string, string>>({})
@@ -12,25 +24,13 @@ function Chat() {
 
     const { t } = useTranslation()
 
-    type Message = {
-        message: string
-        senderId: string
-        timestamp: Date
-    }
-
-    interface ChatSession {
-        user1: string
-        user2: string
-        messages: Message[]
-        _id: string
-    }
-
     useEffect(() => {
         document.title = 'Chat'
         fetchChats()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    // Fetch all chats from the server for the logged in user
     const fetchChats = async () => {
         try {
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -59,7 +59,8 @@ function Chat() {
             }
         }
     }
- 
+    
+    // Server responds with only userIds for the chat participants, we need to fetch the usernames for the chat list
     const fetchUsernames = async (chats: ChatSession[]) => {
         try {
             const promises = chats.map(async (chat) => {
@@ -93,11 +94,13 @@ function Chat() {
         }
     }
 
+    // set state if chat is selected
     const openChat = (chat: ChatSession) => {
         setSelectedChat(chat)
         console.log(selectedChat)
     }
 
+    // get the latest message from the chat to display in the chat list
     const latestMessage = (chat: ChatSession) => {
         if (chat.messages.length > 0) {
             const msg: string = chat.messages[chat.messages.length - 1].message

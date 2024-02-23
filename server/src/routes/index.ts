@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express"
 import bcrypt from "bcrypt"
-import { ValidationError, validationResult, Result, body } from "express-validator"
+import { ValidationError, validationResult, Result } from "express-validator"
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { validateToken } from "../middleware/validateToken"
 import { validateEmail, validatePassword } from "../validators/inputValidation"
@@ -19,6 +19,7 @@ validateEmail, validatePassword,
 async (req: Request, res: Response) => {
     const errors: Result<ValidationError> = validationResult(req)
 
+    // if validation errors are found, return a 400 status code and the errors
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() })
     }
@@ -63,13 +64,14 @@ router.post('/api/users/login',
             return res.status(401).json({ message: 'Login failed' })
         }
         
+        // if the user is found, compare the password sent by the client with the hashed password stored in the database
         if (bcrypt.compareSync(req.body.password, user.password)) {
             const jwtPayload: JwtPayload = {
                 id: user._id,
                 email: user.email,
                 username: user.username
             }
-            const token: string = jwt.sign(jwtPayload, process.env.SECRET as string, { expiresIn: '60m' })
+            const token: string = jwt.sign(jwtPayload, process.env.SECRET as string, { expiresIn: '60m' }) // the token will expire in 60 minutes and the user will have to log in again
             return res.json({ success: true, token, userId: user._id })
         }
         return res.status(401).json({ message:'Invalid password' })
@@ -81,7 +83,6 @@ router.post('/api/users/login',
 
 router.get('/api/users', validateToken, async (req: Request, res: Response) => {
     try {
-        console.log(req.user)
         const loggedUser: IUser | null = await User.findById((req.user as {_id: string})._id)
         const users: IUser[] = await User.find({
             $and: [
@@ -106,9 +107,9 @@ router.get('/api/users/:id', validateToken, async (req: Request, res: Response) 
     return (res.json(user))
 })
 
+// This route is used to update the user's profile
 router.patch('/api/users/:id', validateToken, async (req: Request, res: Response) => {
     try {
-        console.log(req.params.id, req.body)
         const user: IUser | null = await User.findById(req.params.id)
 
         if (!user) {
@@ -157,6 +158,7 @@ router.post('/api/chat', validateToken, async (req: Request, res: Response) => {
     }
 })
 
+// This route is used to fetch all chat sessions for the logged in user
 router.get('/api/chat', validateToken, async (req: Request, res: Response) => {
     try {
         const chatSessions: IChatSession[] = await ChatSession.find({
@@ -172,6 +174,7 @@ router.get('/api/chat', validateToken, async (req: Request, res: Response) => {
     }
 })
 
+// This route is used to send a message to a chat session
 router.post('/api/chat/messages', validateToken, async (req: Request, res: Response) => {
     try {
         const chatSession: IChatSession | null = await ChatSession.findById(req.body.chatId)
@@ -191,6 +194,7 @@ router.post('/api/chat/messages', validateToken, async (req: Request, res: Respo
     }
 })
 
+// This route is used to fetch all messages for a chat session
 router.get('/api/chat/messages/:id', validateToken, async (req: Request, res: Response) => {
     try {
         const chatSession: IChatSession | null = await ChatSession.findById(req.params.id)

@@ -7,6 +7,7 @@ import backgroundImg from "../assets/background.jpg"
 import "./styles/header.css"
 
 function Header() {
+  // Set the background image and check if the user is logged in
   useEffect(() => {
     document.body.style.background = `url(${backgroundImg}) no-repeat center center fixed`
     document.body.style.backgroundSize = 'cover'
@@ -26,6 +27,7 @@ function Header() {
     i18n.changeLanguage(lang)
   }
 
+  // Use the anchorEl to handle menu opening and closing
   const handleMenu = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget)
   }

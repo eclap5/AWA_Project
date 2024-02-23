@@ -7,6 +7,7 @@ import { User, IUser } from "../models/User"
 dotenv.config()
 passport.initialize()
 
+// This is the configuration for the passport-jwt strategy. It is used to authenticate users based on the JWT token sent by the client.
 const jwtStrategyOptions: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.SECRET as string

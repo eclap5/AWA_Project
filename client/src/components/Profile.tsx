@@ -23,6 +23,7 @@ function Profile() {
 
     const { t } = useTranslation()
 
+    // Fetch user data from the server and set the values to the state variables to show default values in the form
     const fetchUser = async () => {
         try {
             const response = await fetch(`http://localhost:3000/api/users/${localStorage.getItem('user_id')}`, {
@@ -57,6 +58,7 @@ function Profile() {
         }
     }
 
+    // Send the updated user data to the server
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
         console.log(username, pc, xbox, playstation, genres, freeText)

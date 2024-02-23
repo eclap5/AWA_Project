@@ -9,6 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const User_1 = require("../models/User");
 dotenv_1.default.config();
 passport_1.default.initialize();
+// This is the configuration for the passport-jwt strategy. It is used to authenticate users based on the JWT token sent by the client.
 const jwtStrategyOptions = {
     jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.SECRET

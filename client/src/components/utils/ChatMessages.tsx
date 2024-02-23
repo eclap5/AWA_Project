@@ -26,7 +26,13 @@ interface ChatSession {
     _id: string
 }
 
-function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username: string }) {
+interface ChatMessagesProps {
+    chat: ChatSession
+    loggedUserId: string | null
+    username: string
+}
+
+const ChatMessages: React.FC<ChatMessagesProps> = ({chat, loggedUserId, username}) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [messages, setMessages] = useState<any[]>([])
@@ -35,23 +41,25 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
 
     const { t } = useTranslation()
 
+    // When the chat changes, update the messages array
     useEffect(() => {
-        const messageArray = props.chat.messages.map((message: Message) => ({
-            position: message.senderId === props.loggedUserId ? 'right' : 'left',
+        const messageArray = chat.messages.map((message: Message) => ({
+            position: message.senderId === loggedUserId ? 'right' : 'left',
             type: 'text',
             text: message.message,
             date: message.timestamp,
-            title: message.senderId === props.loggedUserId ? 'You' : props.username
+            title: message.senderId === loggedUserId ? 'You' : username
         }))
         setMessages(messageArray)
-        console.log(messages)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.chat])
+    }, [chat])
 
+    // Scroll to the bottom of the chat when the messages array changes
     useEffect(() => {
         messageListReferance.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
     }, [messages])
 
+    // Create a new message and send it to the server
     const sendMessage = async () => {
         console.log('Send message', message)
         if (message.trim() !== '') {
@@ -65,14 +73,14 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
             setMessages(prevMessages => [...prevMessages, newMessage])
             
             try {
-                console.log(props.chat._id, message)
+                console.log(chat._id, message)
                 const response = await fetch('http://localhost:3000/api/chat/messages', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ chatId: props.chat._id, message: message, senderId: props.loggedUserId, timestamp: newMessage.date })
+                    body: JSON.stringify({ chatId: chat._id, message: message, senderId: loggedUserId, timestamp: newMessage.date })
                 })
 
                 if (response.status === 403) {
@@ -94,10 +102,11 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
         }
     }
 
+    // Fetch all messages from the server
     const getMessages = async () => {
         console.log('Get messages')
         try {
-            const response = await fetch(`http://localhost:3000/api/chat/messages/${props.chat._id}`, {
+            const response = await fetch(`http://localhost:3000/api/chat/messages/${chat._id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,11 +129,11 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
             if (data) {
                 console.log(data.messages)
                 const messageArray = data.map((message: Message) => ({
-                    position: message.senderId === props.loggedUserId ? 'right' : 'left',
+                    position: message.senderId === loggedUserId ? 'right' : 'left',
                     type: 'text',
                     text: message.message,
                     date: message.timestamp,
-                    title: message.senderId === props.loggedUserId ? 'You' : props.username
+                    title: message.senderId === loggedUserId ? 'You' : username
                 }))
                 
                 setMessages(messageArray)
@@ -138,7 +147,7 @@ function ChatMessages(props: { chat: ChatSession, loggedUserId: string, username
 
     return (
         <>
-            <h3>{props.username}</h3>
+            <h3>{username}</h3>
             <div className='chat-container'>
                 <MessageList
                     referance={messageListReferance}

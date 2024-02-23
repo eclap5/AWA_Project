@@ -6,6 +6,7 @@ interface CustomRequest extends Request {
     user?: JwtPayload
 }
 
+// This middleware function is used to validate the token sent by the client, to ensure that the user is authenticated.
 export const validateToken = (req: CustomRequest, res: Response, next: NextFunction) => {
     passport.authenticate('jwt', { session: false }, (err: Error | null, verifiedUser: JwtPayload | null) => {
         if (err || !verifiedUser) {

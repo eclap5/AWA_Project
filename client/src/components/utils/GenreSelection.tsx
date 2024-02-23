@@ -9,6 +9,7 @@ interface GenreSelectProps {
     setValue: (genres: string[]) => void
 }
 
+// Get genre options from constants and loop through them to create a dropdown menu
 const GenreSelect: React.FC<GenreSelectProps> = ({ genreOptions, genres, setValue }) => {
     return (
         <FormControl className='genre-selection' sx={{ m: 1, width: 300 }}>

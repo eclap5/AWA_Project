@@ -6,6 +6,11 @@ import theme from "./themes/MaterialTheme"
 import "./styles/Register.css"
 import "./styles/Login.css"
 
+interface Credentials {
+    email: string
+    password: string
+}
+
 const Login = () => {
     useEffect(() => {
         document.title = 'Login'
@@ -13,13 +18,9 @@ const Login = () => {
 
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const [error, setError] = useState<string>('')
 
     const { t } = useTranslation()
-
-    interface Credentials {
-        email: string
-        password: string
-    }
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
@@ -38,9 +39,10 @@ const Login = () => {
                     body: JSON.stringify(credentials)
                 })
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`)
+                if (response.status === 401) {
+                    setError('Invalid credentials')
                 }
+
                 const data = await response.json()
 
                 if (data.token) {
@@ -69,6 +71,9 @@ const Login = () => {
                     </div>
                     <div className="form-group">
                         <FormInput label={t('password')} type='password' required={true} value={password} setValue={setPassword} />
+                    </div>
+                    <div style={{color: 'red'}}>
+                        {error}
                     </div>
                     <div className="form-group">
                         <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'lightgray', color: 'black', border: '1px solid white'}}}>{t('Login')}</Button>

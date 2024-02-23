@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 });
 router.post('/api/users/register', inputValidation_1.validateEmail, inputValidation_1.validatePassword, async (req, res) => {
     const errors = (0, express_validator_1.validationResult)(req);
+    // if validation errors are found, return a 400 status code and the errors
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
@@ -53,13 +54,14 @@ router.post('/api/users/login', inputValidation_1.validateEmail, async (req, res
         if (!user) {
             return res.status(401).json({ message: 'Login failed' });
         }
+        // if the user is found, compare the password sent by the client with the hashed password stored in the database
         if (bcrypt_1.default.compareSync(req.body.password, user.password)) {
             const jwtPayload = {
                 id: user._id,
                 email: user.email,
                 username: user.username
             };
-            const token = jsonwebtoken_1.default.sign(jwtPayload, process.env.SECRET, { expiresIn: '60m' });
+            const token = jsonwebtoken_1.default.sign(jwtPayload, process.env.SECRET, { expiresIn: '60m' }); // the token will expire in 60 minutes and the user will have to log in again
             return res.json({ success: true, token, userId: user._id });
         }
         return res.status(401).json({ message: 'Invalid password' });
@@ -71,7 +73,6 @@ router.post('/api/users/login', inputValidation_1.validateEmail, async (req, res
 });
 router.get('/api/users', validateToken_1.validateToken, async (req, res) => {
     try {
-        console.log(req.user);
         const loggedUser = await User_1.User.findById(req.user._id);
         const users = await User_1.User.find({
             $and: [
@@ -94,9 +95,9 @@ router.get('/api/users/:id', validateToken_1.validateToken, async (req, res) => 
     }
     return (res.json(user));
 });
+// This route is used to update the user's profile
 router.patch('/api/users/:id', validateToken_1.validateToken, async (req, res) => {
     try {
-        console.log(req.params.id, req.body);
         const user = await User_1.User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -140,6 +141,7 @@ router.post('/api/chat', validateToken_1.validateToken, async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// This route is used to fetch all chat sessions for the logged in user
 router.get('/api/chat', validateToken_1.validateToken, async (req, res) => {
     try {
         const chatSessions = await ChatSession_1.ChatSession.find({
@@ -155,6 +157,7 @@ router.get('/api/chat', validateToken_1.validateToken, async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// This route is used to send a message to a chat session
 router.post('/api/chat/messages', validateToken_1.validateToken, async (req, res) => {
     try {
         const chatSession = await ChatSession_1.ChatSession.findById(req.body.chatId);
@@ -174,6 +177,7 @@ router.post('/api/chat/messages', validateToken_1.validateToken, async (req, res
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+// This route is used to fetch all messages for a chat session
 router.get('/api/chat/messages/:id', validateToken_1.validateToken, async (req, res) => {
     try {
         const chatSession = await ChatSession_1.ChatSession.findById(req.params.id);

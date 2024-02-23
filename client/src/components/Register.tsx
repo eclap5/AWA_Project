@@ -5,7 +5,6 @@ import GenreSelection from "./utils/GenreSelection"
 import FormInput from "./utils/FormInput"
 import theme from "./themes/MaterialTheme"
 import "./styles/Register.css"
-import backgroundImg from "../assets/background.jpg"
 import { genreOptions } from "../constants/genres"
 import { useTranslation } from "react-i18next"
 
@@ -23,8 +22,6 @@ interface User {
 const Register = () => {
     useEffect(() => {
         document.title = 'Register'
-        document.body.style.background = `url(${backgroundImg}) no-repeat center center fixed`
-        document.body.style.backgroundSize = 'cover'
     }, [])
 
     const [username, setUsername] = useState<string>('')
@@ -35,9 +32,11 @@ const Register = () => {
     const [playstation, setPlaystation] = useState<boolean>(false)
     const [genres, setGenres] = useState<string[]>([])
     const [freeText, setFreeText] = useState<string>('')
+    const [error, setError] = useState<string>('')
 
     const { t } = useTranslation()
 
+    // Form submission creates a new user based on the User interface and sends it to the server
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         const newUser: User = {
@@ -61,9 +60,16 @@ const Register = () => {
                     body: JSON.stringify(user)
                 })
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`)
+                if (response.status === 401) {
+                    setError('Email is already in use')
+                    return
                 }
+
+                if (response.status === 400) {
+                    setError('Password is not strong enough')
+                    return
+                }
+
                 const data = await response.json()
                 console.log(data)
 
@@ -102,6 +108,9 @@ const Register = () => {
                     </div>
                     <div className="form-group">
                         <TextField multiline maxRows={3} inputProps={{ style: {color: 'white'} }} onChange={(event) => {setFreeText(event.target.value)}} label={t('description')} />
+                    </div>
+                    <div style={{ color: 'red' }}>
+                        <p>{error}</p>
                     </div>
                     <div className="form-group">
                         <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'lightgray', color: 'black', border: '1px solid white'}}}>{t('Register')}</Button>

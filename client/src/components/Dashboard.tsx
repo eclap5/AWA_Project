@@ -27,6 +27,7 @@ function Dashboard() {
 
     const { t } = useTranslation()
 
+    // Fetch all users from the server when page is loaded
     useEffect(() => {
         document.title = 'Dashboard'
         setUserId(localStorage.getItem('user_id')!)
@@ -61,6 +62,7 @@ function Dashboard() {
         }
     }
 
+    // Update the user document in the database with the new match or liked user
     const updateUser = async (endpoint: string, user: User) => {
         await fetch(`http://localhost:3000/api/users/${userId}`, {
             method: 'PATCH',
@@ -72,6 +74,7 @@ function Dashboard() {
         })
     }
 
+    // Create a new chat session with the matched user
     const createChatSession = async (user: User) => {
         await fetch('http://localhost:3000/api/chat', {
             method: 'POST',
@@ -83,11 +86,13 @@ function Dashboard() {
         })
     }
 
+    // Increase the index to show the next user in the list
     const increaseUserIndex = () => {
         if (users && userIndex + 1 <= users.length)
             setUserIndex((prevIndex) => (prevIndex + 1 < (users ? users.length + 1 : 0) ? prevIndex + 1 : prevIndex))
     }
 
+    // When a user swipes a card, the user is removed from the list and the user document is updated in the database based on the swipe direction
     const swiped = (direction: string, user: User) => {
         console.log(userIndex, users)
         setHasSwiped(true)
