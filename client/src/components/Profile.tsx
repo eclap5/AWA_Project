@@ -20,6 +20,7 @@ function Profile() {
     const [playstation, setPlaystation] = useState<boolean>(false)
     const [genres, setGenres] = useState<string[]>([])
     const [freeText, setFreeText] = useState<string>('')
+    const [ savedText, setSavedText ] = useState<string>('')
 
     const { t } = useTranslation()
 
@@ -71,6 +72,7 @@ function Profile() {
             body: JSON.stringify({username, pc, xbox, playstation, genres, freeText})
         })
         fetchUser()
+        setSavedText(t('Profile updated'))
     }
 
     return (
@@ -92,6 +94,9 @@ function Profile() {
                     </div>
                     <div className="form-group">
                         <TextField multiline maxRows={3} inputProps={{ style: {color: 'white'} }} onChange={(event) => {setFreeText(event.target.value)}} label={t('description')} defaultValue={freeText} InputLabelProps={{ shrink: !!freeText }} />
+                    </div>
+                    <div>
+                        <p style={{ color: '#7CFC00' }}>{savedText}</p>
                     </div>
                     <div className="form-group">
                         <Button type="submit" variant="contained" sx={{color: 'white', border: '1px solid white', background: '#424242', '&:hover': {background: 'grey', border: '1px solid white'}}}>{t('Save')}</Button>

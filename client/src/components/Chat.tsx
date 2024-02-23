@@ -97,7 +97,6 @@ function Chat() {
     // set state if chat is selected
     const openChat = (chat: ChatSession) => {
         setSelectedChat(chat)
-        console.log(selectedChat)
     }
 
     // get the latest message from the chat to display in the chat list
